@@ -3,7 +3,7 @@ import requests
 import psycopg2
 
 app = Flask(__name__)
-conn = psycopg2.connect(database="service_db",user='wasd',password='123123',host="localhost",port="5432")
+conn = psycopg2.connect(database="service_db",user='postgres',password='123123',host="localhost",port="5432")
 cursor = conn.cursor()
 
 
