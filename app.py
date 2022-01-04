@@ -3,7 +3,12 @@ import requests
 import psycopg2
 
 app = Flask(__name__)
-conn = psycopg2.connect(database="service_db",user='postgres',password='123123',host="localhost",port="5432")
+
+conn = psycopg2.connect(database="service_db",
+                        user="postgres",
+                        password="sql_GH0_Fr1",
+                        host="localhost",
+                        port="5432")
 cursor = conn.cursor()
 
 
@@ -20,8 +25,9 @@ def login():
             password = request.form.get('password')
             cursor.execute("SELECT * FROM service.users WHERE login=%s AND password=%s", (str(username), str(password)))
             records = list(cursor.fetchall())
-
-            return render_template('account.html', full_name=records[0][1])
+            if records == []:
+                return render_template('wrong_request.html')
+            return render_template('account.html', full_name=records[0][1], login=records[0][2], password=records[0][3])
         elif request.form.get("registration"):
             return redirect("/registration/")
 
@@ -34,7 +40,7 @@ def registration():
         name = request.form.get('name')
         login = request.form.get('login')
         password = request.form.get('password')
-
+        
         cursor.execute('INSERT INTO service.users (full_name, login, password) VALUES (%s, %s, %s);',
                        (str(name), str(login), str(password)))
         conn.commit()
